@@ -6,284 +6,90 @@
 <title>Texas UCF Merch Order</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #f5f0eb;
     color: #1a1a1a;
-    line-height: 1.5;
+    line-height: 1.6;
     min-height: 100vh;
   }
-
   .banner {
     background: linear-gradient(135deg, #bf5700 0%, #9a4500 100%);
     color: #fff;
     text-align: center;
-    padding: 2.5rem 1rem 2rem;
+    padding: 2rem 1rem 1.5rem;
   }
-  .banner h1 { font-size: 2rem; font-weight: 700; letter-spacing: 0.02em; }
-  .banner p { margin-top: 0.4rem; font-size: 1rem; opacity: 0.9; }
+  .banner h1 { font-size: 1.8rem; font-weight: 700; }
+  .banner p { margin-top: 0.3rem; font-size: 0.95rem; opacity: 0.9; }
   .banner .deadline {
-    display: inline-block;
-    margin-top: 1rem;
-    background: rgba(255,255,255,0.18);
-    padding: 0.4rem 1.2rem;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.95rem;
+    display: inline-block; margin-top: 0.8rem;
+    background: rgba(255,255,255,0.18); padding: 0.35rem 1rem;
+    border-radius: 6px; font-weight: 600; font-size: 0.9rem;
   }
+  .container { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 
-  .container { max-width: 660px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
-
-  .card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
+  /* products */
+  .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .prod {
+    background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07); text-align: center;
   }
-  .card h2 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #bf5700;
-  }
+  .prod img { width: 100%; height: 160px; object-fit: contain; background: #f8f6f3; padding: 0.75rem; }
+  .prod-info { padding: 0.6rem 0.75rem 0.75rem; }
+  .prod-name { font-weight: 700; font-size: 0.95rem; }
+  .prod-brand { font-size: 0.75rem; color: #888; }
+  .prod-price { font-weight: 700; color: #bf5700; margin-top: 0.2rem; font-size: 0.95rem; }
+  .prod-sizes { font-size: 0.72rem; color: #999; margin-top: 0.15rem; }
 
-  label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
-  .hint { font-weight: 400; font-size: 0.8rem; color: #666; }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  textarea,
-  select {
-    width: 100%;
-    padding: 0.55rem 0.7rem;
-    border: 1.5px solid #d0ccc7;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    background: #fafafa;
-    transition: border-color 0.15s;
+  /* spreadsheet */
+  .sheet-wrap {
+    background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 1.5rem;
   }
-  input:focus, select:focus, textarea:focus {
+  .sheet-title {
+    background: #bf5700; color: #fff; padding: 0.7rem 1rem;
+    font-weight: 700; font-size: 1rem;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th {
+    background: #f5f0eb; font-weight: 700; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.04em; color: #666;
+    padding: 0.5rem 0.4rem; border-bottom: 2px solid #e0dcd7;
+    text-align: left; position: sticky; top: 0;
+  }
+  td { padding: 0.1rem 0.2rem; border-bottom: 1px solid #eee; }
+  td input, td select {
+    width: 100%; border: none; background: transparent;
+    padding: 0.45rem 0.3rem; font-size: 0.88rem; font-family: inherit;
     outline: none;
-    border-color: #bf5700;
-    background: #fff;
   }
-  textarea { resize: vertical; min-height: 60px; }
+  td select { cursor: pointer; }
+  td input:focus, td select:focus { background: #fef9f4; }
+  tr:hover td { background: #fef9f4; }
+  tr.empty td { color: #ccc; }
+  .row-num { width: 30px; color: #bbb; font-size: 0.78rem; text-align: center; background: #fafafa; }
 
-  .field { margin-bottom: 1rem; }
+  .add-row {
+    background: none; border: none; color: #bf5700; font-weight: 600;
+    font-size: 0.85rem; cursor: pointer; padding: 0.6rem 1rem;
+    font-family: inherit; display: block; width: 100%; text-align: left;
+  }
+  .add-row:hover { background: #fef9f4; }
 
-  /* item cards */
-  .items-grid { display: grid; gap: 0.75rem; }
+  /* info cards */
+  .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .info-card {
+    background: #fff; border-radius: 10px; padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07); font-size: 0.9rem; line-height: 1.7;
+  }
+  .info-card h3 { font-size: 0.9rem; color: #bf5700; margin-bottom: 0.4rem; }
+  .info-card strong { color: #bf5700; }
 
-  .item-card {
-    border: 2px solid #e8e4df;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    cursor: pointer;
-    position: relative;
-  }
-  .item-card:hover { border-color: #bf5700; }
-  .item-card.selected {
-    border-color: #bf5700;
-    box-shadow: 0 0 0 3px rgba(191,87,0,0.15);
-    background: #fdf8f4;
-  }
-
-  .item-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-  }
-  .item-header input[type="checkbox"] {
-    width: 20px; height: 20px; accent-color: #bf5700; cursor: pointer; flex-shrink: 0;
-  }
-  .item-info { flex: 1; min-width: 0; }
-  .item-name { font-weight: 700; font-size: 1.05rem; display: block; }
-  .item-brand { font-size: 0.8rem; color: #777; font-weight: 500; }
-  .item-price {
-    font-weight: 700;
-    font-size: 1.05rem;
-    color: #bf5700;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .item-img-wrap {
-    width: 100%;
-    background: #f8f6f3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #ebe7e2;
-  }
-  .item-img-wrap img {
-    max-height: 180px;
-    max-width: 100%;
-    object-fit: contain;
-    border-radius: 6px;
-  }
-
-  .item-options {
-    display: none;
-    padding: 0.85rem 1rem 1rem;
-    border-top: 1px solid #ebe7e2;
-  }
-  .item-card.selected .item-options { display: block; }
-
-  .row { display: flex; gap: 0.75rem; }
-  .row > .field { flex: 1; }
-
-  /* size guide */
-  .size-guide-toggle {
-    background: none;
-    border: none;
-    color: #bf5700;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 0;
-    margin-top: 0.25rem;
-    font-family: inherit;
-  }
-  .size-guide-toggle:hover { color: #9a4500; }
-  .size-chart {
-    display: none;
-    margin-top: 0.5rem;
-    overflow-x: auto;
-  }
-  .size-chart.open { display: block; }
-  .size-chart table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.78rem;
-  }
-  .size-chart th, .size-chart td {
-    padding: 0.35rem 0.5rem;
-    border: 1px solid #e0dcd7;
-    text-align: center;
-  }
-  .size-chart th {
-    background: #f5f0eb;
-    font-weight: 600;
-    color: #555;
-  }
-  .size-chart td { background: #fff; }
-
-  /* buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.7rem 1.6rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    font-family: inherit;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn-primary { background: #bf5700; color: #fff; width: 100%; }
-  .btn-primary:hover { background: #a84c00; }
-  .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
-
-  .btn-outline {
-    background: transparent;
-    border: 2px solid #bf5700;
-    color: #bf5700;
-  }
-  .btn-outline:hover { background: rgba(191,87,0,0.06); }
-
-  /* order total bar */
-  .order-total {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 0.75rem 1rem;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  .order-total .total-amount { color: #f5a623; font-size: 1.2rem; }
-
-  /* payment info box */
-  .pay-box {
-    background: #fdf8f4;
-    border: 1.5px solid #e8d8c8;
-    border-radius: 8px;
-    padding: 1rem;
-    font-size: 0.92rem;
-    line-height: 1.7;
-  }
-  .pay-box strong { color: #bf5700; }
-
-  /* summary modal */
-  .overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 100;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-  }
-  .overlay.show { display: flex; }
-  .modal {
-    background: #fff;
-    border-radius: 14px;
-    max-width: 520px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 1.75rem;
-    position: relative;
-  }
-  .modal h2 { font-size: 1.2rem; margin-bottom: 1rem; color: #bf5700; }
-  .modal pre {
-    background: #f7f4f0;
-    border-radius: 8px;
-    padding: 1rem;
-    font-size: 0.85rem;
-    white-space: pre-wrap;
-    word-break: break-word;
-    line-height: 1.6;
-    font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-    margin-bottom: 1rem;
-  }
-  .modal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .close-btn {
-    position: absolute; top: 0.75rem; right: 1rem;
-    background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999;
-  }
-  .close-btn:hover { color: #333; }
-
-  .copied-toast {
-    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
-    background: #1a1a1a; color: #fff; padding: 0.6rem 1.4rem;
-    border-radius: 8px; font-size: 0.9rem; font-weight: 600;
-    opacity: 0; transition: opacity 0.25s; z-index: 200; pointer-events: none;
-  }
-  .copied-toast.show { opacity: 1; }
-
-  .error { color: #c0392b; font-size: 0.85rem; margin-top: 0.25rem; display: none; }
-
-  @media (max-width: 480px) {
-    .banner h1 { font-size: 1.5rem; }
-    .row { flex-direction: column; gap: 0; }
-    .modal { padding: 1.25rem; }
-    .item-img-wrap img { max-height: 140px; }
+  @media (max-width: 600px) {
+    .products { grid-template-columns: repeat(2, 1fr); }
+    .info-row { grid-template-columns: 1fr; }
+    table { font-size: 0.8rem; }
+    td input, td select { font-size: 0.8rem; }
   }
 </style>
 </head>
@@ -291,479 +97,148 @@
 
 <div class="banner">
   <h1>Texas UCF Merch Order</h1>
-  <p>Threadfellows Custom Merch &mdash; Your Logo, Premium Brands</p>
-  <div class="deadline">Deadline: March 29, 2026 &mdash; 11:59 PM PT</div>
+  <p>Pick what you want below &mdash; we'll place the order for you</p>
+  <div class="deadline">Deadline: March 29, 2026</div>
 </div>
 
 <div class="container">
 
-  <!-- INFO -->
-  <div class="card">
-    <h2>Your Info</h2>
-    <div class="field">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" placeholder="First Last" required>
-      <div class="error" id="name-err">Please enter your name.</div>
-    </div>
-    <div class="row">
-      <div class="field">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="you@email.com" required>
-        <div class="error" id="email-err">Please enter a valid email.</div>
+  <!-- PRODUCTS -->
+  <div class="products">
+    <div class="prod">
+      <img src="https://threadfellows.com/cdn/shop/products/carhartt-sweatshirts-s-black-carhartt-midweight-hooded-sweatshirt-28171899109399.jpg?v=1628382873&width=400" alt="Hoodie">
+      <div class="prod-info">
+        <div class="prod-name">Hoodie</div>
+        <div class="prod-brand">Carhartt Midweight</div>
+        <div class="prod-price">$66 <span class="prod-sizes">(3XL+ $71)</span></div>
+        <div class="prod-sizes">XS &bull; S &bull; M &bull; L &bull; XL &bull; 2XL &bull; 3XL</div>
       </div>
-      <div class="field">
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" placeholder="(555) 123-4567" required>
-        <div class="error" id="phone-err">Please enter your phone number.</div>
+    </div>
+    <div class="prod">
+      <img src="https://threadfellows.com/cdn/shop/products/nike-polos-s-anthracite-nike-mens-dri-fit-micro-pique-2-0-polo-28198942605335.jpg?v=1632945316&width=400" alt="Polo">
+      <div class="prod-info">
+        <div class="prod-name">Polo</div>
+        <div class="prod-brand">Nike Dri-FIT</div>
+        <div class="prod-price">$44 <span class="prod-sizes">(2XL $49)</span></div>
+        <div class="prod-sizes">XS &bull; S &bull; M &bull; L &bull; XL &bull; 2XL</div>
+      </div>
+    </div>
+    <div class="prod">
+      <img src="https://threadfellows.com/cdn/shop/files/travismathew-layering-s-black-travismathew-men-s-crestview-1-4-zip-30794320150551.jpg?v=1695555442&width=400" alt="Quarter Zip">
+      <div class="prod-info">
+        <div class="prod-name">Quarter Zip</div>
+        <div class="prod-brand">TravisMathew Crestview</div>
+        <div class="prod-price">$89 <span class="prod-sizes">(2XL $92 / 3XL $94)</span></div>
+        <div class="prod-sizes">XS &bull; S &bull; M &bull; L &bull; XL &bull; 2XL &bull; 3XL</div>
+      </div>
+    </div>
+    <div class="prod">
+      <img src="https://threadfellows.com/cdn/shop/products/north-face-headwear-one-size-grey-heather-black-the-north-face-trucker-cap-28143882010647.jpg?v=1628347229&width=400" alt="Hat">
+      <div class="prod-info">
+        <div class="prod-name">Hat</div>
+        <div class="prod-brand">North Face Trucker</div>
+        <div class="prod-price">$32</div>
+        <div class="prod-sizes">One Size (adjustable)</div>
       </div>
     </div>
   </div>
 
-  <!-- PICKUP -->
-  <div class="card">
-    <h2>Pickup / Shipping</h2>
-    <div class="field">
-      <label for="delivery">How do you want to get your merch?</label>
-      <select id="delivery">
-        <option value="meeting">Pickup at meeting / event</option>
-        <option value="campus">Pickup on campus (we'll coordinate)</option>
-        <option value="ship">Ship to me</option>
-      </select>
-    </div>
-    <div class="field" id="address-field" style="display:none;">
-      <label for="address">Shipping Address</label>
-      <textarea id="address" placeholder="Full name, street, apt/unit, city, state, ZIP"></textarea>
-      <div class="error" id="address-err">Please enter your shipping address.</div>
-    </div>
-  </div>
-
-  <!-- ITEMS -->
-  <div class="card">
-    <h2>Select Your Items</h2>
-
-    <!-- Size Guide -->
-    <button class="size-guide-toggle" onclick="toggleSizeChart()">View Size Guide</button>
-    <div class="size-chart" id="size-chart">
-      <table>
-        <tr>
-          <th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Best For</th>
-        </tr>
-        <tr><td>XS</td><td>32-34</td><td>26-28</td><td>Very slim build</td></tr>
-        <tr><td>S</td><td>35-37</td><td>28-30</td><td>Slim build</td></tr>
-        <tr><td>M</td><td>38-40</td><td>31-33</td><td>Average build</td></tr>
-        <tr><td>L</td><td>41-43</td><td>34-36</td><td>Athletic / broad</td></tr>
-        <tr><td>XL</td><td>44-46</td><td>37-39</td><td>Large / relaxed fit</td></tr>
-        <tr><td>2XL</td><td>47-49</td><td>40-43</td><td>Plus</td></tr>
-        <tr><td>3XL</td><td>50-53</td><td>44-47</td><td>Plus+</td></tr>
+  <!-- SPREADSHEET -->
+  <div class="sheet-wrap">
+    <div class="sheet-title">Enter your order</div>
+    <div style="overflow-x:auto;">
+      <table id="order-table">
+        <thead>
+          <tr>
+            <th class="row-num">#</th>
+            <th>Name</th>
+            <th>Phone or Email</th>
+            <th>Item</th>
+            <th>Size</th>
+            <th>Color</th>
+            <th>Qty</th>
+            <th>Pickup / Ship</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
       </table>
     </div>
-
-    <div class="items-grid" style="margin-top:1rem;">
-
-      <!-- Hoodie -->
-      <div class="item-card" data-item="hoodie" data-price-base="66" data-price-plus="71">
-        <div class="item-img-wrap">
-          <img src="https://threadfellows.com/cdn/shop/products/carhartt-sweatshirts-s-black-carhartt-midweight-hooded-sweatshirt-28171899109399.jpg?v=1628382873&width=400" alt="Carhartt Hoodie">
-        </div>
-        <div class="item-header" onclick="toggleItem('hoodie')">
-          <input type="checkbox" id="chk-hoodie">
-          <div class="item-info">
-            <span class="item-name">Hoodie</span>
-            <span class="item-brand">Carhartt Midweight Hooded Sweatshirt</span>
-          </div>
-          <span class="item-price">$66</span>
-        </div>
-        <div class="item-options">
-          <div class="row">
-            <div class="field">
-              <label for="hoodie-size">Size <span class="hint">(3XL+ $71)</span></label>
-              <select id="hoodie-size" onchange="updateTotal()">
-                <option value="">-- Pick --</option>
-                <option>XS</option><option>S</option><option>M</option>
-                <option>L</option><option>XL</option><option>2XL</option><option value="3XL">3XL (+$5)</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="hoodie-qty">Qty</label>
-              <select id="hoodie-qty" onchange="updateTotal()">
-                <option>1</option><option>2</option><option>3</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="hoodie-color">Color</label>
-            <select id="hoodie-color">
-              <option value="">-- Pick --</option>
-              <option>Black</option><option>Navy</option><option>Heather Grey</option>
-              <option>Carbon Heather</option><option>Moss</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Polo -->
-      <div class="item-card" data-item="polo" data-price-base="44" data-price-plus="49">
-        <div class="item-img-wrap">
-          <img src="https://threadfellows.com/cdn/shop/products/nike-polos-s-anthracite-nike-mens-dri-fit-micro-pique-2-0-polo-28198942605335.jpg?v=1632945316&width=400" alt="Nike Polo">
-        </div>
-        <div class="item-header" onclick="toggleItem('polo')">
-          <input type="checkbox" id="chk-polo">
-          <div class="item-info">
-            <span class="item-name">Polo</span>
-            <span class="item-brand">Nike Dri-FIT Micro Pique 2.0</span>
-          </div>
-          <span class="item-price">$44</span>
-        </div>
-        <div class="item-options">
-          <div class="row">
-            <div class="field">
-              <label for="polo-size">Size <span class="hint">(2XL $49)</span></label>
-              <select id="polo-size" onchange="updateTotal()">
-                <option value="">-- Pick --</option>
-                <option>XS</option><option>S</option><option>M</option>
-                <option>L</option><option>XL</option><option value="2XL">2XL (+$5)</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="polo-qty">Qty</label>
-              <select id="polo-qty" onchange="updateTotal()">
-                <option>1</option><option>2</option><option>3</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="polo-color">Color</label>
-            <select id="polo-color">
-              <option value="">-- Pick --</option>
-              <option>Black</option><option>Anthracite</option><option>Navy</option>
-              <option>White</option><option>Cool Grey</option><option>Game Royal</option>
-              <option>Team Red</option><option>Gorge Green</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quarter Zip -->
-      <div class="item-card" data-item="qzip" data-price-base="89" data-price-plus="92">
-        <div class="item-img-wrap">
-          <img src="https://threadfellows.com/cdn/shop/files/travismathew-layering-s-black-travismathew-men-s-crestview-1-4-zip-30794320150551.jpg?v=1695555442&width=400" alt="TravisMathew Quarter Zip">
-        </div>
-        <div class="item-header" onclick="toggleItem('qzip')">
-          <input type="checkbox" id="chk-qzip">
-          <div class="item-info">
-            <span class="item-name">Quarter Zip</span>
-            <span class="item-brand">TravisMathew Crestview 1/4-Zip</span>
-          </div>
-          <span class="item-price">$89</span>
-        </div>
-        <div class="item-options">
-          <div class="row">
-            <div class="field">
-              <label for="qzip-size">Size <span class="hint">(2XL $92 / 3XL $94)</span></label>
-              <select id="qzip-size" onchange="updateTotal()">
-                <option value="">-- Pick --</option>
-                <option>XS</option><option>S</option><option>M</option>
-                <option>L</option><option>XL</option><option value="2XL">2XL (+$3)</option><option value="3XL">3XL (+$5)</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="qzip-qty">Qty</label>
-              <select id="qzip-qty" onchange="updateTotal()">
-                <option>1</option><option>2</option><option>3</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="qzip-color">Color</label>
-            <select id="qzip-color">
-              <option value="">-- Pick --</option>
-              <option>Black</option><option>Grey Heather</option>
-              <option>Vintage Indigo Heather</option><option>Dream Blue</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Hat -->
-      <div class="item-card" data-item="hat" data-price-base="32" data-price-plus="32">
-        <div class="item-img-wrap">
-          <img src="https://threadfellows.com/cdn/shop/products/north-face-headwear-one-size-grey-heather-black-the-north-face-trucker-cap-28143882010647.jpg?v=1628347229&width=400" alt="The North Face Hat">
-        </div>
-        <div class="item-header" onclick="toggleItem('hat')">
-          <input type="checkbox" id="chk-hat">
-          <div class="item-info">
-            <span class="item-name">Hat</span>
-            <span class="item-brand">The North Face Ultimate Trucker Cap</span>
-          </div>
-          <span class="item-price">$32</span>
-        </div>
-        <div class="item-options">
-          <div class="row">
-            <div class="field">
-              <label for="hat-style">Style</label>
-              <select id="hat-style">
-                <option>Adjustable (one size)</option>
-                <option>Fitted</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="hat-qty">Qty</label>
-              <select id="hat-qty" onchange="updateTotal()">
-                <option>1</option><option>2</option><option>3</option>
-              </select>
-            </div>
-          </div>
-          <div class="field" id="hat-fitted-field" style="display:none;">
-            <label for="hat-fitted-size">Fitted Size</label>
-            <input type="text" id="hat-fitted-size" placeholder="e.g. 7 1/4">
-          </div>
-          <div class="field">
-            <label for="hat-color">Color</label>
-            <select id="hat-color">
-              <option value="">-- Pick --</option>
-              <option>Black/White</option><option>Black/Black</option>
-              <option>Grey Heather/Black</option><option>Navy/White</option>
-              <option>Blue/Black</option><option>Burnt Olive/Grey</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /items-grid -->
-
-    <div class="error" id="items-err" style="margin-top:0.5rem;">Please select at least one item.</div>
-
-    <div class="field" style="margin-top:1rem;">
-      <label for="logo-pref">Logo Placement (your custom Texas UCF logo)</label>
-      <select id="logo-pref">
-        <option>Small (left chest / front)</option>
-        <option>Large (center front)</option>
-        <option>No preference</option>
-      </select>
-    </div>
+    <button class="add-row" onclick="addRow()">+ Add another row</button>
   </div>
 
-  <!-- ORDER TOTAL -->
-  <div class="order-total">
-    <span>Estimated Total</span>
-    <span class="total-amount" id="total-display">$0.00</span>
-  </div>
-
-  <!-- PAYMENT -->
-  <div class="card">
-    <h2>Payment</h2>
-    <div class="pay-box">
+  <!-- INFO -->
+  <div class="info-row">
+    <div class="info-card">
+      <h3>Payment</h3>
       <strong>Zelle</strong> to <strong>(408) 510-0376</strong><br>
-      Put your <strong>full name + "UCF Merch"</strong> in the Zelle memo.<br>
-      Pay by <strong>March 29, 2026</strong>. Order not confirmed until paid.
+      Memo: <strong>Your Name + "UCF Merch"</strong><br>
+      Pay by <strong>March 29, 2026</strong>
     </div>
-    <div class="field" style="margin-top:1rem;">
-      <label for="pay-status">Payment Status</label>
-      <select id="pay-status">
-        <option value="paid">I already paid</option>
-        <option value="will-pay">I will pay by the deadline</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- NOTES -->
-  <div class="card">
-    <h2>Notes (optional)</h2>
-    <div class="field">
-      <textarea id="notes" placeholder="Fit preferences, questions, etc."></textarea>
+    <div class="info-card">
+      <h3>Colors Available</h3>
+      <strong>Hoodie:</strong> Black, Navy, Heather Grey, Carbon Heather, Moss<br>
+      <strong>Polo:</strong> Black, Anthracite, Navy, White, Cool Grey, Team Red<br>
+      <strong>Quarter Zip:</strong> Black, Grey Heather, Vintage Indigo, Dream Blue<br>
+      <strong>Hat:</strong> Black/White, Grey/Black, Navy/White, Blue/Black
     </div>
   </div>
 
-  <button class="btn btn-primary" onclick="submitOrder()">Submit Order</button>
 </div>
-
-<!-- SUMMARY MODAL -->
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <button class="close-btn" onclick="closeModal()">&times;</button>
-    <h2>Order Summary</h2>
-    <pre id="summary-text"></pre>
-    <div class="modal-actions">
-      <button class="btn btn-primary" style="flex:1;" onclick="copySummary()">Copy to Clipboard</button>
-      <button class="btn btn-outline" style="flex:1;" onclick="textSummary()">Text / Message</button>
-    </div>
-    <p style="margin-top:1rem;font-size:0.85rem;color:#666;text-align:center;">
-      Copy this summary and send it to your club organizer, or use the Text button to open your messaging app.
-    </p>
-  </div>
-</div>
-
-<div class="copied-toast" id="toast">Copied!</div>
 
 <script>
-  const itemKeys = ['hoodie', 'polo', 'qzip', 'hat'];
-  const itemLabels = { hoodie: 'Hoodie', polo: 'Polo', qzip: 'Quarter Zip', hat: 'Hat' };
-  const itemBrands = {
-    hoodie: 'Carhartt Midweight Hooded Sweatshirt',
-    polo: 'Nike Dri-FIT Micro Pique 2.0 Polo',
-    qzip: 'TravisMathew Crestview 1/4-Zip',
-    hat: 'The North Face Ultimate Trucker Cap'
+  const ITEMS = ['Hoodie', 'Polo', 'Quarter Zip', 'Hat'];
+  const SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+  const COLORS = {
+    'Hoodie': ['Black', 'Navy', 'Heather Grey', 'Carbon Heather', 'Moss'],
+    'Polo': ['Black', 'Anthracite', 'Navy', 'White', 'Cool Grey', 'Game Royal', 'Team Red', 'Gorge Green'],
+    'Quarter Zip': ['Black', 'Grey Heather', 'Vintage Indigo Heather', 'Dream Blue'],
+    'Hat': ['Black/White', 'Black/Black', 'Grey Heather/Black', 'Navy/White', 'Blue/Black', 'Burnt Olive/Grey']
   };
+  const DELIVERY = ['Pickup - Meeting', 'Pickup - Campus', 'Ship to me'];
 
-  function getItemPrice(item) {
-    const card = document.querySelector(`[data-item="${item}"]`);
-    const base = parseInt(card.dataset.priceBase);
-    const plus = parseInt(card.dataset.pricePlus);
+  let rowCount = 0;
 
-    if (item === 'hat') return base;
+  function makeOptions(arr, placeholder) {
+    let html = `<option value="">${placeholder}</option>`;
+    arr.forEach(v => html += `<option value="${v}">${v}</option>`);
+    return html;
+  }
 
-    const sizeEl = document.getElementById(`${item}-size`);
-    const size = sizeEl ? sizeEl.value : '';
+  function addRow() {
+    rowCount++;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="row-num">${rowCount}</td>
+      <td><input type="text" placeholder="Your name"></td>
+      <td><input type="text" placeholder="Phone or email"></td>
+      <td><select onchange="updateColorOptions(this)">${makeOptions(ITEMS, 'Pick item')}</select></td>
+      <td><select>${makeOptions(SIZES, 'Size')}</select></td>
+      <td><select>${makeOptions(COLORS['Hoodie'], 'Color')}</select></td>
+      <td><select>${makeOptions(['1','2','3'], 'Qty')}</select></td>
+      <td><select>${makeOptions(DELIVERY, 'Pickup/Ship')}</select></td>
+    `;
+    document.getElementById('table-body').appendChild(tr);
+  }
 
-    if (item === 'hoodie' && size === '3XL') return plus;
-    if (item === 'polo' && size === '2XL') return plus;
-    if (item === 'qzip') {
-      if (size === '2XL') return 92;
-      if (size === '3XL') return 94;
+  function updateColorOptions(sel) {
+    const item = sel.value;
+    const row = sel.closest('tr');
+    const colorSel = row.querySelectorAll('select')[2];
+    const sizeSel = row.querySelectorAll('select')[1];
+
+    if (item && COLORS[item]) {
+      colorSel.innerHTML = makeOptions(COLORS[item], 'Color');
     }
-    return base;
+    if (item === 'Hat') {
+      sizeSel.innerHTML = '<option value="One Size">One Size</option>';
+    } else {
+      sizeSel.innerHTML = makeOptions(SIZES, 'Size');
+    }
   }
 
-  function updateTotal() {
-    let total = 0;
-    itemKeys.forEach(item => {
-      if (document.getElementById(`chk-${item}`).checked) {
-        const price = getItemPrice(item);
-        const qty = parseInt(document.getElementById(`${item}-qty`).value) || 1;
-        total += price * qty;
-      }
-    });
-    document.getElementById('total-display').textContent = '$' + total.toFixed(2);
-  }
-
-  function toggleItem(item) {
-    const card = document.querySelector(`[data-item="${item}"]`);
-    const chk = document.getElementById(`chk-${item}`);
-    chk.checked = !chk.checked;
-    card.classList.toggle('selected', chk.checked);
-    updateTotal();
-  }
-
-  function toggleSizeChart() {
-    document.getElementById('size-chart').classList.toggle('open');
-  }
-
-  // delivery toggle
-  document.getElementById('delivery').addEventListener('change', function() {
-    document.getElementById('address-field').style.display = this.value === 'ship' ? 'block' : 'none';
-  });
-
-  // hat fitted toggle
-  document.getElementById('hat-style').addEventListener('change', function() {
-    document.getElementById('hat-fitted-field').style.display = this.value === 'Fitted' ? 'block' : 'none';
-  });
-
-  function clearErrors() {
-    document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
-  }
-
-  function showError(id) {
-    document.getElementById(id).style.display = 'block';
-  }
-
-  function submitOrder() {
-    clearErrors();
-    let valid = true;
-
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const delivery = document.getElementById('delivery').value;
-    const address = document.getElementById('address').value.trim();
-    const logoPref = document.getElementById('logo-pref').value;
-    const payStatus = document.getElementById('pay-status').value;
-    const notes = document.getElementById('notes').value.trim();
-
-    if (!name) { showError('name-err'); valid = false; }
-    if (!email || !email.includes('@')) { showError('email-err'); valid = false; }
-    if (!phone) { showError('phone-err'); valid = false; }
-    if (delivery === 'ship' && !address) { showError('address-err'); valid = false; }
-
-    const selected = itemKeys.filter(i => document.getElementById(`chk-${i}`).checked);
-    if (selected.length === 0) { showError('items-err'); valid = false; }
-
-    if (!valid) return;
-
-    let total = 0;
-    let lines = [];
-    lines.push('=== TEXAS UCF MERCH ORDER ===');
-    lines.push('');
-    lines.push(`Name:    ${name}`);
-    lines.push(`Email:   ${email}`);
-    lines.push(`Phone:   ${phone}`);
-    lines.push(`Pickup:  ${delivery === 'meeting' ? 'Meeting/Event' : delivery === 'campus' ? 'Campus' : 'Ship to me'}`);
-    if (delivery === 'ship') lines.push(`Address: ${address}`);
-    lines.push(`Logo:    ${logoPref}`);
-    lines.push('');
-    lines.push('--- Items ---');
-
-    selected.forEach(item => {
-      const qty = parseInt(document.getElementById(`${item}-qty`).value) || 1;
-      const price = getItemPrice(item);
-      const lineTotal = price * qty;
-      total += lineTotal;
-
-      if (item === 'hat') {
-        const style = document.getElementById('hat-style').value;
-        const color = document.getElementById('hat-color').value || 'No pref';
-        let line = `${itemLabels[item]} x${qty}  |  ${style}  |  ${color}  |  $${lineTotal}`;
-        if (style === 'Fitted') {
-          const fs = document.getElementById('hat-fitted-size').value.trim();
-          if (fs) line += `  |  Fitted: ${fs}`;
-        }
-        lines.push(line);
-        lines.push(`  ${itemBrands[item]}`);
-      } else {
-        const size = document.getElementById(`${item}-size`).value || '??';
-        const color = document.getElementById(`${item}-color`).value || 'No pref';
-        lines.push(`${itemLabels[item]} x${qty}  |  ${size}  |  ${color}  |  $${lineTotal}`);
-        lines.push(`  ${itemBrands[item]}`);
-      }
-    });
-
-    lines.push('');
-    lines.push(`TOTAL: $${total.toFixed(2)}`);
-    lines.push('');
-    lines.push(`Payment: Zelle to (408) 510-0376`);
-    lines.push(`Memo:    ${name} UCF Merch`);
-    lines.push(`Status:  ${payStatus === 'paid' ? 'Already paid' : 'Will pay by deadline'}`);
-    if (notes) { lines.push(''); lines.push(`Notes: ${notes}`); }
-    lines.push('');
-    lines.push('Deadline: March 29, 2026 - 11:59 PM PT');
-
-    const text = lines.join('\n');
-    document.getElementById('summary-text').textContent = text;
-    document.getElementById('overlay').classList.add('show');
-  }
-
-  function closeModal() {
-    document.getElementById('overlay').classList.remove('show');
-  }
-
-  function copySummary() {
-    const text = document.getElementById('summary-text').textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      const toast = document.getElementById('toast');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 1800);
-    });
-  }
-
-  function textSummary() {
-    const text = document.getElementById('summary-text').textContent;
-    const encoded = encodeURIComponent(text);
-    window.open(`sms:?body=${encoded}`, '_self');
-  }
-
-  // close modal on overlay click
-  document.getElementById('overlay').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
+  // start with 5 empty rows
+  for (let i = 0; i < 5; i++) addRow();
 </script>
 </body>
 </html>
