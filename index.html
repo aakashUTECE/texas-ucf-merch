@@ -33,7 +33,7 @@
     font-size: 0.95rem;
   }
 
-  .container { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+  .container { max-width: 660px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
 
   .card {
     background: #fff;
@@ -80,8 +80,8 @@
 
   .item-card {
     border: 2px solid #e8e4df;
-    border-radius: 10px;
-    padding: 1rem;
+    border-radius: 12px;
+    overflow: hidden;
     transition: border-color 0.15s, box-shadow 0.15s;
     cursor: pointer;
     position: relative;
@@ -97,23 +97,84 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    padding: 0.75rem 1rem;
   }
   .item-header input[type="checkbox"] {
-    width: 20px; height: 20px; accent-color: #bf5700; cursor: pointer;
+    width: 20px; height: 20px; accent-color: #bf5700; cursor: pointer; flex-shrink: 0;
   }
-  .item-name { font-weight: 700; font-size: 1rem; }
-  .item-icon { font-size: 1.4rem; margin-left: auto; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-name { font-weight: 700; font-size: 1.05rem; display: block; }
+  .item-brand { font-size: 0.8rem; color: #777; font-weight: 500; }
+  .item-price {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #bf5700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .item-img-wrap {
+    width: 100%;
+    background: #f8f6f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #ebe7e2;
+  }
+  .item-img-wrap img {
+    max-height: 180px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+  }
 
   .item-options {
     display: none;
-    margin-top: 0.85rem;
-    padding-top: 0.85rem;
+    padding: 0.85rem 1rem 1rem;
     border-top: 1px solid #ebe7e2;
   }
   .item-card.selected .item-options { display: block; }
 
   .row { display: flex; gap: 0.75rem; }
   .row > .field { flex: 1; }
+
+  /* size guide */
+  .size-guide-toggle {
+    background: none;
+    border: none;
+    color: #bf5700;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    margin-top: 0.25rem;
+    font-family: inherit;
+  }
+  .size-guide-toggle:hover { color: #9a4500; }
+  .size-chart {
+    display: none;
+    margin-top: 0.5rem;
+    overflow-x: auto;
+  }
+  .size-chart.open { display: block; }
+  .size-chart table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+  .size-chart th, .size-chart td {
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #e0dcd7;
+    text-align: center;
+  }
+  .size-chart th {
+    background: #f5f0eb;
+    font-weight: 600;
+    color: #555;
+  }
+  .size-chart td { background: #fff; }
 
   /* buttons */
   .btn {
@@ -141,6 +202,21 @@
     color: #bf5700;
   }
   .btn-outline:hover { background: rgba(191,87,0,0.06); }
+
+  /* order total bar */
+  .order-total {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .order-total .total-amount { color: #f5a623; font-size: 1.2rem; }
 
   /* payment info box */
   .pay-box {
@@ -207,6 +283,7 @@
     .banner h1 { font-size: 1.5rem; }
     .row { flex-direction: column; gap: 0; }
     .modal { padding: 1.25rem; }
+    .item-img-wrap img { max-height: 140px; }
   }
 </style>
 </head>
@@ -214,7 +291,7 @@
 
 <div class="banner">
   <h1>Texas UCF Merch Order</h1>
-  <p>Threadfellows Custom Merch</p>
+  <p>Threadfellows Custom Merch &mdash; Your Logo, Premium Brands</p>
   <div class="deadline">Deadline: March 29, 2026 &mdash; 11:59 PM PT</div>
 </div>
 
@@ -263,27 +340,52 @@
   <!-- ITEMS -->
   <div class="card">
     <h2>Select Your Items</h2>
-    <div class="items-grid">
+
+    <!-- Size Guide -->
+    <button class="size-guide-toggle" onclick="toggleSizeChart()">View Size Guide</button>
+    <div class="size-chart" id="size-chart">
+      <table>
+        <tr>
+          <th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Best For</th>
+        </tr>
+        <tr><td>XS</td><td>32-34</td><td>26-28</td><td>Very slim build</td></tr>
+        <tr><td>S</td><td>35-37</td><td>28-30</td><td>Slim build</td></tr>
+        <tr><td>M</td><td>38-40</td><td>31-33</td><td>Average build</td></tr>
+        <tr><td>L</td><td>41-43</td><td>34-36</td><td>Athletic / broad</td></tr>
+        <tr><td>XL</td><td>44-46</td><td>37-39</td><td>Large / relaxed fit</td></tr>
+        <tr><td>2XL</td><td>47-49</td><td>40-43</td><td>Plus</td></tr>
+        <tr><td>3XL</td><td>50-53</td><td>44-47</td><td>Plus+</td></tr>
+      </table>
+    </div>
+
+    <div class="items-grid" style="margin-top:1rem;">
 
       <!-- Hoodie -->
-      <div class="item-card" data-item="hoodie">
+      <div class="item-card" data-item="hoodie" data-price-base="66" data-price-plus="71">
+        <div class="item-img-wrap">
+          <img src="https://threadfellows.com/cdn/shop/products/carhartt-sweatshirts-s-black-carhartt-midweight-hooded-sweatshirt-28171899109399.jpg?v=1628382873&width=400" alt="Carhartt Hoodie">
+        </div>
         <div class="item-header" onclick="toggleItem('hoodie')">
           <input type="checkbox" id="chk-hoodie">
-          <span class="item-name">Hoodie</span>
+          <div class="item-info">
+            <span class="item-name">Hoodie</span>
+            <span class="item-brand">Carhartt Midweight Hooded Sweatshirt</span>
+          </div>
+          <span class="item-price">$66</span>
         </div>
         <div class="item-options">
           <div class="row">
             <div class="field">
-              <label for="hoodie-size">Size</label>
-              <select id="hoodie-size">
+              <label for="hoodie-size">Size <span class="hint">(3XL+ $71)</span></label>
+              <select id="hoodie-size" onchange="updateTotal()">
                 <option value="">-- Pick --</option>
                 <option>XS</option><option>S</option><option>M</option>
-                <option>L</option><option>XL</option><option>2XL</option><option>3XL</option>
+                <option>L</option><option>XL</option><option>2XL</option><option value="3XL">3XL (+$5)</option>
               </select>
             </div>
             <div class="field">
               <label for="hoodie-qty">Qty</label>
-              <select id="hoodie-qty">
+              <select id="hoodie-qty" onchange="updateTotal()">
                 <option>1</option><option>2</option><option>3</option>
               </select>
             </div>
@@ -292,31 +394,39 @@
             <label for="hoodie-color">Color</label>
             <select id="hoodie-color">
               <option value="">-- Pick --</option>
-              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+              <option>Black</option><option>Navy</option><option>Heather Grey</option>
+              <option>Carbon Heather</option><option>Moss</option>
             </select>
           </div>
         </div>
       </div>
 
       <!-- Polo -->
-      <div class="item-card" data-item="polo">
+      <div class="item-card" data-item="polo" data-price-base="44" data-price-plus="49">
+        <div class="item-img-wrap">
+          <img src="https://threadfellows.com/cdn/shop/products/nike-polos-s-anthracite-nike-mens-dri-fit-micro-pique-2-0-polo-28198942605335.jpg?v=1632945316&width=400" alt="Nike Polo">
+        </div>
         <div class="item-header" onclick="toggleItem('polo')">
           <input type="checkbox" id="chk-polo">
-          <span class="item-name">Polo</span>
+          <div class="item-info">
+            <span class="item-name">Polo</span>
+            <span class="item-brand">Nike Dri-FIT Micro Pique 2.0</span>
+          </div>
+          <span class="item-price">$44</span>
         </div>
         <div class="item-options">
           <div class="row">
             <div class="field">
-              <label for="polo-size">Size</label>
-              <select id="polo-size">
+              <label for="polo-size">Size <span class="hint">(2XL $49)</span></label>
+              <select id="polo-size" onchange="updateTotal()">
                 <option value="">-- Pick --</option>
                 <option>XS</option><option>S</option><option>M</option>
-                <option>L</option><option>XL</option><option>2XL</option><option>3XL</option>
+                <option>L</option><option>XL</option><option value="2XL">2XL (+$5)</option>
               </select>
             </div>
             <div class="field">
               <label for="polo-qty">Qty</label>
-              <select id="polo-qty">
+              <select id="polo-qty" onchange="updateTotal()">
                 <option>1</option><option>2</option><option>3</option>
               </select>
             </div>
@@ -325,31 +435,40 @@
             <label for="polo-color">Color</label>
             <select id="polo-color">
               <option value="">-- Pick --</option>
-              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+              <option>Black</option><option>Anthracite</option><option>Navy</option>
+              <option>White</option><option>Cool Grey</option><option>Game Royal</option>
+              <option>Team Red</option><option>Gorge Green</option>
             </select>
           </div>
         </div>
       </div>
 
       <!-- Quarter Zip -->
-      <div class="item-card" data-item="qzip">
+      <div class="item-card" data-item="qzip" data-price-base="89" data-price-plus="92">
+        <div class="item-img-wrap">
+          <img src="https://threadfellows.com/cdn/shop/files/travismathew-layering-s-black-travismathew-men-s-crestview-1-4-zip-30794320150551.jpg?v=1695555442&width=400" alt="TravisMathew Quarter Zip">
+        </div>
         <div class="item-header" onclick="toggleItem('qzip')">
           <input type="checkbox" id="chk-qzip">
-          <span class="item-name">Quarter Zip</span>
+          <div class="item-info">
+            <span class="item-name">Quarter Zip</span>
+            <span class="item-brand">TravisMathew Crestview 1/4-Zip</span>
+          </div>
+          <span class="item-price">$89</span>
         </div>
         <div class="item-options">
           <div class="row">
             <div class="field">
-              <label for="qzip-size">Size</label>
-              <select id="qzip-size">
+              <label for="qzip-size">Size <span class="hint">(2XL $92 / 3XL $94)</span></label>
+              <select id="qzip-size" onchange="updateTotal()">
                 <option value="">-- Pick --</option>
                 <option>XS</option><option>S</option><option>M</option>
-                <option>L</option><option>XL</option><option>2XL</option><option>3XL</option>
+                <option>L</option><option>XL</option><option value="2XL">2XL (+$3)</option><option value="3XL">3XL (+$5)</option>
               </select>
             </div>
             <div class="field">
               <label for="qzip-qty">Qty</label>
-              <select id="qzip-qty">
+              <select id="qzip-qty" onchange="updateTotal()">
                 <option>1</option><option>2</option><option>3</option>
               </select>
             </div>
@@ -358,17 +477,25 @@
             <label for="qzip-color">Color</label>
             <select id="qzip-color">
               <option value="">-- Pick --</option>
-              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+              <option>Black</option><option>Grey Heather</option>
+              <option>Vintage Indigo Heather</option><option>Dream Blue</option>
             </select>
           </div>
         </div>
       </div>
 
       <!-- Hat -->
-      <div class="item-card" data-item="hat">
+      <div class="item-card" data-item="hat" data-price-base="32" data-price-plus="32">
+        <div class="item-img-wrap">
+          <img src="https://threadfellows.com/cdn/shop/products/north-face-headwear-one-size-grey-heather-black-the-north-face-trucker-cap-28143882010647.jpg?v=1628347229&width=400" alt="The North Face Hat">
+        </div>
         <div class="item-header" onclick="toggleItem('hat')">
           <input type="checkbox" id="chk-hat">
-          <span class="item-name">Hat</span>
+          <div class="item-info">
+            <span class="item-name">Hat</span>
+            <span class="item-brand">The North Face Ultimate Trucker Cap</span>
+          </div>
+          <span class="item-price">$32</span>
         </div>
         <div class="item-options">
           <div class="row">
@@ -381,7 +508,7 @@
             </div>
             <div class="field">
               <label for="hat-qty">Qty</label>
-              <select id="hat-qty">
+              <select id="hat-qty" onchange="updateTotal()">
                 <option>1</option><option>2</option><option>3</option>
               </select>
             </div>
@@ -394,7 +521,9 @@
             <label for="hat-color">Color</label>
             <select id="hat-color">
               <option value="">-- Pick --</option>
-              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+              <option>Black/White</option><option>Black/Black</option>
+              <option>Grey Heather/Black</option><option>Navy/White</option>
+              <option>Blue/Black</option><option>Burnt Olive/Grey</option>
             </select>
           </div>
         </div>
@@ -405,13 +534,19 @@
     <div class="error" id="items-err" style="margin-top:0.5rem;">Please select at least one item.</div>
 
     <div class="field" style="margin-top:1rem;">
-      <label for="logo-pref">Logo Placement</label>
+      <label for="logo-pref">Logo Placement (your custom Texas UCF logo)</label>
       <select id="logo-pref">
         <option>Small (left chest / front)</option>
         <option>Large (center front)</option>
         <option>No preference</option>
       </select>
     </div>
+  </div>
+
+  <!-- ORDER TOTAL -->
+  <div class="order-total">
+    <span>Estimated Total</span>
+    <span class="total-amount" id="total-display">$0.00</span>
   </div>
 
   <!-- PAYMENT -->
@@ -461,14 +596,56 @@
 <div class="copied-toast" id="toast">Copied!</div>
 
 <script>
-  const items = ['hoodie', 'polo', 'qzip', 'hat'];
+  const itemKeys = ['hoodie', 'polo', 'qzip', 'hat'];
   const itemLabels = { hoodie: 'Hoodie', polo: 'Polo', qzip: 'Quarter Zip', hat: 'Hat' };
+  const itemBrands = {
+    hoodie: 'Carhartt Midweight Hooded Sweatshirt',
+    polo: 'Nike Dri-FIT Micro Pique 2.0 Polo',
+    qzip: 'TravisMathew Crestview 1/4-Zip',
+    hat: 'The North Face Ultimate Trucker Cap'
+  };
+
+  function getItemPrice(item) {
+    const card = document.querySelector(`[data-item="${item}"]`);
+    const base = parseInt(card.dataset.priceBase);
+    const plus = parseInt(card.dataset.pricePlus);
+
+    if (item === 'hat') return base;
+
+    const sizeEl = document.getElementById(`${item}-size`);
+    const size = sizeEl ? sizeEl.value : '';
+
+    if (item === 'hoodie' && size === '3XL') return plus;
+    if (item === 'polo' && size === '2XL') return plus;
+    if (item === 'qzip') {
+      if (size === '2XL') return 92;
+      if (size === '3XL') return 94;
+    }
+    return base;
+  }
+
+  function updateTotal() {
+    let total = 0;
+    itemKeys.forEach(item => {
+      if (document.getElementById(`chk-${item}`).checked) {
+        const price = getItemPrice(item);
+        const qty = parseInt(document.getElementById(`${item}-qty`).value) || 1;
+        total += price * qty;
+      }
+    });
+    document.getElementById('total-display').textContent = '$' + total.toFixed(2);
+  }
 
   function toggleItem(item) {
     const card = document.querySelector(`[data-item="${item}"]`);
     const chk = document.getElementById(`chk-${item}`);
     chk.checked = !chk.checked;
     card.classList.toggle('selected', chk.checked);
+    updateTotal();
+  }
+
+  function toggleSizeChart() {
+    document.getElementById('size-chart').classList.toggle('open');
   }
 
   // delivery toggle
@@ -507,12 +684,12 @@
     if (!phone) { showError('phone-err'); valid = false; }
     if (delivery === 'ship' && !address) { showError('address-err'); valid = false; }
 
-    const selected = items.filter(i => document.getElementById(`chk-${i}`).checked);
+    const selected = itemKeys.filter(i => document.getElementById(`chk-${i}`).checked);
     if (selected.length === 0) { showError('items-err'); valid = false; }
 
     if (!valid) return;
 
-    // build summary
+    let total = 0;
     let lines = [];
     lines.push('=== TEXAS UCF MERCH ORDER ===');
     lines.push('');
@@ -526,26 +703,34 @@
     lines.push('--- Items ---');
 
     selected.forEach(item => {
+      const qty = parseInt(document.getElementById(`${item}-qty`).value) || 1;
+      const price = getItemPrice(item);
+      const lineTotal = price * qty;
+      total += lineTotal;
+
       if (item === 'hat') {
         const style = document.getElementById('hat-style').value;
-        const qty = document.getElementById('hat-qty').value;
         const color = document.getElementById('hat-color').value || 'No pref';
-        let line = `Hat x${qty}  |  ${style}  |  ${color}`;
+        let line = `${itemLabels[item]} x${qty}  |  ${style}  |  ${color}  |  $${lineTotal}`;
         if (style === 'Fitted') {
           const fs = document.getElementById('hat-fitted-size').value.trim();
-          if (fs) line += `  |  Fitted size: ${fs}`;
+          if (fs) line += `  |  Fitted: ${fs}`;
         }
         lines.push(line);
+        lines.push(`  ${itemBrands[item]}`);
       } else {
         const size = document.getElementById(`${item}-size`).value || '??';
-        const qty = document.getElementById(`${item}-qty`).value;
         const color = document.getElementById(`${item}-color`).value || 'No pref';
-        lines.push(`${itemLabels[item]} x${qty}  |  ${size}  |  ${color}`);
+        lines.push(`${itemLabels[item]} x${qty}  |  ${size}  |  ${color}  |  $${lineTotal}`);
+        lines.push(`  ${itemBrands[item]}`);
       }
     });
 
     lines.push('');
+    lines.push(`TOTAL: $${total.toFixed(2)}`);
+    lines.push('');
     lines.push(`Payment: Zelle to (408) 510-0376`);
+    lines.push(`Memo:    ${name} UCF Merch`);
     lines.push(`Status:  ${payStatus === 'paid' ? 'Already paid' : 'Will pay by deadline'}`);
     if (notes) { lines.push(''); lines.push(`Notes: ${notes}`); }
     lines.push('');
@@ -574,15 +759,6 @@
     const encoded = encodeURIComponent(text);
     window.open(`sms:?body=${encoded}`, '_self');
   }
-
-  // clicking anywhere on the item card (not just the header) should also work
-  document.querySelectorAll('.item-card').forEach(card => {
-    card.addEventListener('click', function(e) {
-      // don't toggle if clicking on a select/input inside options
-      if (e.target.closest('.item-options') && e.target.tagName !== 'DIV') return;
-      if (e.target.closest('.item-header')) return; // already handled by onclick
-    });
-  });
 
   // close modal on overlay click
   document.getElementById('overlay').addEventListener('click', function(e) {
