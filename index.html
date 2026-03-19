@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Texas UCF Merch Order</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f0eb;
+    color: #1a1a1a;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .banner {
+    background: linear-gradient(135deg, #bf5700 0%, #9a4500 100%);
+    color: #fff;
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+  }
+  .banner h1 { font-size: 2rem; font-weight: 700; letter-spacing: 0.02em; }
+  .banner p { margin-top: 0.4rem; font-size: 1rem; opacity: 0.9; }
+  .banner .deadline {
+    display: inline-block;
+    margin-top: 1rem;
+    background: rgba(255,255,255,0.18);
+    padding: 0.4rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .container { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .card h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #bf5700;
+  }
+
+  label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .hint { font-weight: 400; font-size: 0.8rem; color: #666; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    border: 1.5px solid #d0ccc7;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #fafafa;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #bf5700;
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 60px; }
+
+  .field { margin-bottom: 1rem; }
+
+  /* item cards */
+  .items-grid { display: grid; gap: 0.75rem; }
+
+  .item-card {
+    border: 2px solid #e8e4df;
+    border-radius: 10px;
+    padding: 1rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    position: relative;
+  }
+  .item-card:hover { border-color: #bf5700; }
+  .item-card.selected {
+    border-color: #bf5700;
+    box-shadow: 0 0 0 3px rgba(191,87,0,0.15);
+    background: #fdf8f4;
+  }
+
+  .item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .item-header input[type="checkbox"] {
+    width: 20px; height: 20px; accent-color: #bf5700; cursor: pointer;
+  }
+  .item-name { font-weight: 700; font-size: 1rem; }
+  .item-icon { font-size: 1.4rem; margin-left: auto; }
+
+  .item-options {
+    display: none;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #ebe7e2;
+  }
+  .item-card.selected .item-options { display: block; }
+
+  .row { display: flex; gap: 0.75rem; }
+  .row > .field { flex: 1; }
+
+  /* buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.6rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    font-family: inherit;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: #bf5700; color: #fff; width: 100%; }
+  .btn-primary:hover { background: #a84c00; }
+  .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid #bf5700;
+    color: #bf5700;
+  }
+  .btn-outline:hover { background: rgba(191,87,0,0.06); }
+
+  /* payment info box */
+  .pay-box {
+    background: #fdf8f4;
+    border: 1.5px solid #e8d8c8;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .pay-box strong { color: #bf5700; }
+
+  /* summary modal */
+  .overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 14px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 1.75rem;
+    position: relative;
+  }
+  .modal h2 { font-size: 1.2rem; margin-bottom: 1rem; color: #bf5700; }
+  .modal pre {
+    background: #f7f4f0;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+    font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+    margin-bottom: 1rem;
+  }
+  .modal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .close-btn {
+    position: absolute; top: 0.75rem; right: 1rem;
+    background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999;
+  }
+  .close-btn:hover { color: #333; }
+
+  .copied-toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    background: #1a1a1a; color: #fff; padding: 0.6rem 1.4rem;
+    border-radius: 8px; font-size: 0.9rem; font-weight: 600;
+    opacity: 0; transition: opacity 0.25s; z-index: 200; pointer-events: none;
+  }
+  .copied-toast.show { opacity: 1; }
+
+  .error { color: #c0392b; font-size: 0.85rem; margin-top: 0.25rem; display: none; }
+
+  @media (max-width: 480px) {
+    .banner h1 { font-size: 1.5rem; }
+    .row { flex-direction: column; gap: 0; }
+    .modal { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <h1>Texas UCF Merch Order</h1>
+  <p>Threadfellows Custom Merch</p>
+  <div class="deadline">Deadline: March 29, 2026 &mdash; 11:59 PM PT</div>
+</div>
+
+<div class="container">
+
+  <!-- INFO -->
+  <div class="card">
+    <h2>Your Info</h2>
+    <div class="field">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="First Last" required>
+      <div class="error" id="name-err">Please enter your name.</div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@email.com" required>
+        <div class="error" id="email-err">Please enter a valid email.</div>
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" placeholder="(555) 123-4567" required>
+        <div class="error" id="phone-err">Please enter your phone number.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PICKUP -->
+  <div class="card">
+    <h2>Pickup / Shipping</h2>
+    <div class="field">
+      <label for="delivery">How do you want to get your merch?</label>
+      <select id="delivery">
+        <option value="meeting">Pickup at meeting / event</option>
+        <option value="campus">Pickup on campus (we'll coordinate)</option>
+        <option value="ship">Ship to me</option>
+      </select>
+    </div>
+    <div class="field" id="address-field" style="display:none;">
+      <label for="address">Shipping Address</label>
+      <textarea id="address" placeholder="Full name, street, apt/unit, city, state, ZIP"></textarea>
+      <div class="error" id="address-err">Please enter your shipping address.</div>
+    </div>
+  </div>
+
+  <!-- ITEMS -->
+  <div class="card">
+    <h2>Select Your Items</h2>
+    <div class="items-grid">
+
+      <!-- Hoodie -->
+      <div class="item-card" data-item="hoodie">
+        <div class="item-header" onclick="toggleItem('hoodie')">
+          <input type="checkbox" id="chk-hoodie">
+          <span class="item-name">Hoodie</span>
+        </div>
+        <div class="item-options">
+          <div class="row">
+            <div class="field">
+              <label for="hoodie-size">Size</label>
+              <select id="hoodie-size">
+                <option value="">-- Pick --</option>
+                <option>XS</option><option>S</option><option>M</option>
+                <option>L</option><option>XL</option><option>2XL</option><option>3XL</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="hoodie-qty">Qty</label>
+              <select id="hoodie-qty">
+                <option>1</option><option>2</option><option>3</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="hoodie-color">Color</label>
+            <select id="hoodie-color">
+              <option value="">-- Pick --</option>
+              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Polo -->
+      <div class="item-card" data-item="polo">
+        <div class="item-header" onclick="toggleItem('polo')">
+          <input type="checkbox" id="chk-polo">
+          <span class="item-name">Polo</span>
+        </div>
+        <div class="item-options">
+          <div class="row">
+            <div class="field">
+              <label for="polo-size">Size</label>
+              <select id="polo-size">
+                <option value="">-- Pick --</option>
+                <option>XS</option><option>S</option><option>M</option>
+                <option>L</option><option>XL</option><option>2XL</option><option>3XL</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="polo-qty">Qty</label>
+              <select id="polo-qty">
+                <option>1</option><option>2</option><option>3</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="polo-color">Color</label>
+            <select id="polo-color">
+              <option value="">-- Pick --</option>
+              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quarter Zip -->
+      <div class="item-card" data-item="qzip">
+        <div class="item-header" onclick="toggleItem('qzip')">
+          <input type="checkbox" id="chk-qzip">
+          <span class="item-name">Quarter Zip</span>
+        </div>
+        <div class="item-options">
+          <div class="row">
+            <div class="field">
+              <label for="qzip-size">Size</label>
+              <select id="qzip-size">
+                <option value="">-- Pick --</option>
+                <option>XS</option><option>S</option><option>M</option>
+                <option>L</option><option>XL</option><option>2XL</option><option>3XL</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="qzip-qty">Qty</label>
+              <select id="qzip-qty">
+                <option>1</option><option>2</option><option>3</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="qzip-color">Color</label>
+            <select id="qzip-color">
+              <option value="">-- Pick --</option>
+              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hat -->
+      <div class="item-card" data-item="hat">
+        <div class="item-header" onclick="toggleItem('hat')">
+          <input type="checkbox" id="chk-hat">
+          <span class="item-name">Hat</span>
+        </div>
+        <div class="item-options">
+          <div class="row">
+            <div class="field">
+              <label for="hat-style">Style</label>
+              <select id="hat-style">
+                <option>Adjustable (one size)</option>
+                <option>Fitted</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="hat-qty">Qty</label>
+              <select id="hat-qty">
+                <option>1</option><option>2</option><option>3</option>
+              </select>
+            </div>
+          </div>
+          <div class="field" id="hat-fitted-field" style="display:none;">
+            <label for="hat-fitted-size">Fitted Size</label>
+            <input type="text" id="hat-fitted-size" placeholder="e.g. 7 1/4">
+          </div>
+          <div class="field">
+            <label for="hat-color">Color</label>
+            <select id="hat-color">
+              <option value="">-- Pick --</option>
+              <option>Black</option><option>Navy</option><option>Grey</option><option>White</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /items-grid -->
+
+    <div class="error" id="items-err" style="margin-top:0.5rem;">Please select at least one item.</div>
+
+    <div class="field" style="margin-top:1rem;">
+      <label for="logo-pref">Logo Placement</label>
+      <select id="logo-pref">
+        <option>Small (left chest / front)</option>
+        <option>Large (center front)</option>
+        <option>No preference</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="card">
+    <h2>Payment</h2>
+    <div class="pay-box">
+      <strong>Zelle</strong> to <strong>(408) 510-0376</strong><br>
+      Put your <strong>full name + "UCF Merch"</strong> in the Zelle memo.<br>
+      Pay by <strong>March 29, 2026</strong>. Order not confirmed until paid.
+    </div>
+    <div class="field" style="margin-top:1rem;">
+      <label for="pay-status">Payment Status</label>
+      <select id="pay-status">
+        <option value="paid">I already paid</option>
+        <option value="will-pay">I will pay by the deadline</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="card">
+    <h2>Notes (optional)</h2>
+    <div class="field">
+      <textarea id="notes" placeholder="Fit preferences, questions, etc."></textarea>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="submitOrder()">Submit Order</button>
+</div>
+
+<!-- SUMMARY MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <h2>Order Summary</h2>
+    <pre id="summary-text"></pre>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="flex:1;" onclick="copySummary()">Copy to Clipboard</button>
+      <button class="btn btn-outline" style="flex:1;" onclick="textSummary()">Text / Message</button>
+    </div>
+    <p style="margin-top:1rem;font-size:0.85rem;color:#666;text-align:center;">
+      Copy this summary and send it to your club organizer, or use the Text button to open your messaging app.
+    </p>
+  </div>
+</div>
+
+<div class="copied-toast" id="toast">Copied!</div>
+
+<script>
+  const items = ['hoodie', 'polo', 'qzip', 'hat'];
+  const itemLabels = { hoodie: 'Hoodie', polo: 'Polo', qzip: 'Quarter Zip', hat: 'Hat' };
+
+  function toggleItem(item) {
+    const card = document.querySelector(`[data-item="${item}"]`);
+    const chk = document.getElementById(`chk-${item}`);
+    chk.checked = !chk.checked;
+    card.classList.toggle('selected', chk.checked);
+  }
+
+  // delivery toggle
+  document.getElementById('delivery').addEventListener('change', function() {
+    document.getElementById('address-field').style.display = this.value === 'ship' ? 'block' : 'none';
+  });
+
+  // hat fitted toggle
+  document.getElementById('hat-style').addEventListener('change', function() {
+    document.getElementById('hat-fitted-field').style.display = this.value === 'Fitted' ? 'block' : 'none';
+  });
+
+  function clearErrors() {
+    document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
+  }
+
+  function showError(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+
+  function submitOrder() {
+    clearErrors();
+    let valid = true;
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const delivery = document.getElementById('delivery').value;
+    const address = document.getElementById('address').value.trim();
+    const logoPref = document.getElementById('logo-pref').value;
+    const payStatus = document.getElementById('pay-status').value;
+    const notes = document.getElementById('notes').value.trim();
+
+    if (!name) { showError('name-err'); valid = false; }
+    if (!email || !email.includes('@')) { showError('email-err'); valid = false; }
+    if (!phone) { showError('phone-err'); valid = false; }
+    if (delivery === 'ship' && !address) { showError('address-err'); valid = false; }
+
+    const selected = items.filter(i => document.getElementById(`chk-${i}`).checked);
+    if (selected.length === 0) { showError('items-err'); valid = false; }
+
+    if (!valid) return;
+
+    // build summary
+    let lines = [];
+    lines.push('=== TEXAS UCF MERCH ORDER ===');
+    lines.push('');
+    lines.push(`Name:    ${name}`);
+    lines.push(`Email:   ${email}`);
+    lines.push(`Phone:   ${phone}`);
+    lines.push(`Pickup:  ${delivery === 'meeting' ? 'Meeting/Event' : delivery === 'campus' ? 'Campus' : 'Ship to me'}`);
+    if (delivery === 'ship') lines.push(`Address: ${address}`);
+    lines.push(`Logo:    ${logoPref}`);
+    lines.push('');
+    lines.push('--- Items ---');
+
+    selected.forEach(item => {
+      if (item === 'hat') {
+        const style = document.getElementById('hat-style').value;
+        const qty = document.getElementById('hat-qty').value;
+        const color = document.getElementById('hat-color').value || 'No pref';
+        let line = `Hat x${qty}  |  ${style}  |  ${color}`;
+        if (style === 'Fitted') {
+          const fs = document.getElementById('hat-fitted-size').value.trim();
+          if (fs) line += `  |  Fitted size: ${fs}`;
+        }
+        lines.push(line);
+      } else {
+        const size = document.getElementById(`${item}-size`).value || '??';
+        const qty = document.getElementById(`${item}-qty`).value;
+        const color = document.getElementById(`${item}-color`).value || 'No pref';
+        lines.push(`${itemLabels[item]} x${qty}  |  ${size}  |  ${color}`);
+      }
+    });
+
+    lines.push('');
+    lines.push(`Payment: Zelle to (408) 510-0376`);
+    lines.push(`Status:  ${payStatus === 'paid' ? 'Already paid' : 'Will pay by deadline'}`);
+    if (notes) { lines.push(''); lines.push(`Notes: ${notes}`); }
+    lines.push('');
+    lines.push('Deadline: March 29, 2026 - 11:59 PM PT');
+
+    const text = lines.join('\n');
+    document.getElementById('summary-text').textContent = text;
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  function copySummary() {
+    const text = document.getElementById('summary-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    });
+  }
+
+  function textSummary() {
+    const text = document.getElementById('summary-text').textContent;
+    const encoded = encodeURIComponent(text);
+    window.open(`sms:?body=${encoded}`, '_self');
+  }
+
+  // clicking anywhere on the item card (not just the header) should also work
+  document.querySelectorAll('.item-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      // don't toggle if clicking on a select/input inside options
+      if (e.target.closest('.item-options') && e.target.tagName !== 'DIV') return;
+      if (e.target.closest('.item-header')) return; // already handled by onclick
+    });
+  });
+
+  // close modal on overlay click
+  document.getElementById('overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+</body>
+</html>
